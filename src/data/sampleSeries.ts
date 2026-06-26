@@ -31,7 +31,7 @@ export const sampleSeries: ChartSeries[] = [
       { date: '2026-06-11', value: 0.78 },
       { date: '2026-06-12', value: 1.23 },
       { date: '2026-06-13', value: 0.79 },
-      { date: '2026-06-14', value: 0.85 },
+      { date: '2026-06-14', value: 0.71 },
     ],
   },
   {
@@ -63,7 +63,7 @@ export const sampleSeries: ChartSeries[] = [
       { date: '2026-06-11', value: 48 },
       { date: '2026-06-12', value: 36 },
       { date: '2026-06-13', value: 70 },
-      { date: '2026-06-14', value: 55 },
+      { date: '2026-06-14', value: 90 },
     ],
   },
 ];

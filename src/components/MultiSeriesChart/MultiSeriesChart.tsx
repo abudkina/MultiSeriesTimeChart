@@ -41,6 +41,20 @@ function getAxisIndex(format: AxisFormat): number {
   }
 }
 
+function haloEmphasis(color: string, scale = 5.5) {
+  return {
+    focus: 'none' as const,
+    scale,
+    itemStyle: {
+      color: '#fff',
+      borderColor: color,
+      borderWidth: 2,
+      shadowBlur: 28,
+      shadowColor: `${color}66`,
+    },
+  };
+}
+
 function buildSeriesConfig(s: ChartSeries): SeriesOption {
   const color = s.color ?? DEFAULT_COLORS[s.type];
   const axisFormat = s.axisFormat ?? (s.type === 'bar' ? 'decimal' : 'number');
@@ -55,6 +69,8 @@ function buildSeriesConfig(s: ChartSeries): SeriesOption {
     z: s.type === 'area' ? 1 : s.type === 'bar' ? 2 : s.type === 'spline' ? 4 : 5,
   };
 
+  const noBlur = { lineStyle: { opacity: 1 }, areaStyle: { opacity: 0.88 } };
+
   switch (s.type) {
     case 'area':
       return {
@@ -62,60 +78,42 @@ function buildSeriesConfig(s: ChartSeries): SeriesOption {
         type: 'line' as const,
         smooth: false,
         symbol: 'circle',
-        symbolSize: 6,
+        symbolSize: 5,
         showSymbol: false,
         lineStyle: { width: 0 },
-        areaStyle: { color, opacity: 0.92 },
+        areaStyle: { color, opacity: 0.88 },
         itemStyle: { color: '#fff', borderColor: color, borderWidth: 2 },
-        emphasis: {
-          focus: 'series',
-          scale: 4,
-          itemStyle: {
-            color: '#fff',
-            borderColor: color,
-            borderWidth: 2,
-            shadowBlur: 22,
-            shadowColor: 'rgba(255, 193, 7, 0.55)',
-          },
-        },
+        blur: noBlur,
+        emphasis: haloEmphasis(color, 6),
       };
     case 'bar':
       return {
         ...base,
         type: 'bar' as const,
-        barWidth: '55%',
-        barMaxWidth: 10,
-        barMinHeight: 3,
+        barWidth: '50%',
+        barMaxWidth: 9,
+        barMinHeight: 4,
         itemStyle: {
           color,
-          borderRadius: [4, 4, 0, 0],
+          borderRadius: [5, 5, 0, 0],
         },
       };
     case 'spline':
       return {
         ...base,
         type: 'line',
-        smooth: 0.45,
+        smooth: 0.38,
         symbol: 'diamond',
-        symbolSize: 7,
+        symbolSize: 6,
         showSymbol: false,
-        lineStyle: { color, width: 3 },
+        lineStyle: { color, width: 3.5, cap: 'round', join: 'round' },
         itemStyle: {
           color: '#fff',
           borderColor: color,
           borderWidth: 2,
         },
-        emphasis: {
-          focus: 'series',
-          scale: 4,
-          itemStyle: {
-            color: '#fff',
-            borderColor: color,
-            borderWidth: 2,
-            shadowBlur: 24,
-            shadowColor: 'rgba(46, 125, 50, 0.45)',
-          },
-        },
+        blur: noBlur,
+        emphasis: haloEmphasis(color, 5.5),
       };
     case 'line':
       return {
@@ -123,21 +121,12 @@ function buildSeriesConfig(s: ChartSeries): SeriesOption {
         type: 'line',
         smooth: false,
         symbol: 'rect',
-        symbolSize: 6,
+        symbolSize: 5,
         showSymbol: true,
-        lineStyle: { color, width: 2 },
-        itemStyle: { color },
-        emphasis: {
-          focus: 'series',
-          scale: 4,
-          itemStyle: {
-            color: '#fff',
-            borderColor: color,
-            borderWidth: 2,
-            shadowBlur: 24,
-            shadowColor: 'rgba(170, 0, 255, 0.4)',
-          },
-        },
+        lineStyle: { color, width: 1.8, cap: 'square', join: 'miter' },
+        itemStyle: { color, borderWidth: 0 },
+        blur: noBlur,
+        emphasis: haloEmphasis(color, 5.5),
       };
   }
 }
@@ -173,7 +162,7 @@ function axisRange(series: ChartSeries[], format: AxisFormat): [number, number] 
 
   switch (format) {
     case 'decimal':
-      return [0, Math.max(max * 8, 1)];
+      return [0, Math.max(max * 14, 1)];
     case 'currency':
       return [0, max + pad * 2];
     case 'percent':
@@ -218,24 +207,26 @@ export function MultiSeriesChart({
       backgroundColor: 'transparent',
       animation: false,
       grid: {
-        left: 4,
-        right: 8,
-        top: 6,
-        bottom: 4,
+        left: 2,
+        right: 6,
+        top: 4,
+        bottom: 6,
         containLabel: false,
       },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
           type: 'line',
-          lineStyle: { color: 'rgba(0,0,0,0.15)', width: 1 },
+          snap: true,
+          lineStyle: { color: 'rgba(0,0,0,0.06)', width: 1 },
+          label: { show: false },
         },
         backgroundColor: '#fff',
         borderColor: 'transparent',
-        borderRadius: 8,
-        padding: [10, 14],
+        borderRadius: 6,
+        padding: [8, 12],
         extraCssText:
-          'box-shadow: 0 4px 16px rgba(0,0,0,0.12); border: none; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;',
+          'box-shadow: 0 2px 12px rgba(0,0,0,0.14); border: none; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;',
         formatter: (params: AxisTooltipParams | AxisTooltipParams[]) => {
           const items = Array.isArray(params) ? params : [params];
           if (!items.length) return '';
@@ -256,8 +247,7 @@ export function MultiSeriesChart({
                   : raw;
               return `<div class="chart-tooltip-row">
                 <span class="chart-tooltip-dot" style="background:${dot}"></span>
-                <span class="chart-tooltip-label">${p.seriesName}:</span>
-                <span class="chart-tooltip-value">${val}</span>
+                <span class="chart-tooltip-text">${p.seriesName}: <strong>${val}</strong></span>
               </div>`;
             })
             .join('');
@@ -297,13 +287,13 @@ export function MultiSeriesChart({
 
       <div className="multi-series-chart__body">
         <div className="multi-series-chart__axis-labels">
-          <span className="multi-series-chart__today">{todayLabel}</span>
-          <span>0%</span>
-          <span>$0</span>
-          <span>$0</span>
-          <span>0</span>
-          <span>0</span>
-          <span className="multi-series-chart__dash">—</span>
+          <span className="multi-series-chart__axis-item multi-series-chart__today">{todayLabel}</span>
+          <span className="multi-series-chart__axis-item">0%</span>
+          <span className="multi-series-chart__axis-item">$0</span>
+          <span className="multi-series-chart__axis-item">$0</span>
+          <span className="multi-series-chart__axis-item">0</span>
+          <span className="multi-series-chart__axis-item">0</span>
+          <span className="multi-series-chart__axis-item multi-series-chart__dash">—</span>
         </div>
         <div className="multi-series-chart__plot">
           <ReactECharts
