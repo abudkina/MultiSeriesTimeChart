@@ -41,16 +41,18 @@ function getAxisIndex(format: AxisFormat): number {
   }
 }
 
-function haloEmphasis(color: string, scale = 5.5) {
+function activeMarkerEmphasis(color: string, scale = 2.35) {
   return {
     focus: 'none' as const,
     scale,
     itemStyle: {
       color: '#fff',
       borderColor: color,
-      borderWidth: 2,
-      shadowBlur: 28,
-      shadowColor: `${color}66`,
+      borderWidth: 2.5,
+      shadowBlur: 5,
+      shadowColor: 'rgba(0, 0, 0, 0.2)',
+      shadowOffsetX: 0,
+      shadowOffsetY: 1,
     },
   };
 }
@@ -78,13 +80,13 @@ function buildSeriesConfig(s: ChartSeries): SeriesOption {
         type: 'line' as const,
         smooth: false,
         symbol: 'circle',
-        symbolSize: 5,
+        symbolSize: 6,
         showSymbol: false,
         lineStyle: { width: 0 },
         areaStyle: { color, opacity: 0.88 },
         itemStyle: { color: '#fff', borderColor: color, borderWidth: 2 },
         blur: noBlur,
-        emphasis: haloEmphasis(color, 6),
+        emphasis: activeMarkerEmphasis(color, 2.2),
       };
     case 'bar':
       return {
@@ -104,16 +106,16 @@ function buildSeriesConfig(s: ChartSeries): SeriesOption {
         type: 'line',
         smooth: 0.38,
         symbol: 'diamond',
-        symbolSize: 6,
+        symbolSize: 7,
         showSymbol: false,
         lineStyle: { color, width: 3.5, cap: 'round', join: 'round' },
         itemStyle: {
           color: '#fff',
           borderColor: color,
-          borderWidth: 2,
+          borderWidth: 2.5,
         },
         blur: noBlur,
-        emphasis: haloEmphasis(color, 5.5),
+        emphasis: activeMarkerEmphasis(color, 2.3),
       };
     case 'line':
       return {
@@ -121,12 +123,12 @@ function buildSeriesConfig(s: ChartSeries): SeriesOption {
         type: 'line',
         smooth: false,
         symbol: 'rect',
-        symbolSize: 5,
+        symbolSize: 6,
         showSymbol: true,
         lineStyle: { color, width: 1.8, cap: 'square', join: 'miter' },
         itemStyle: { color, borderWidth: 0 },
         blur: noBlur,
-        emphasis: haloEmphasis(color, 5.5),
+        emphasis: activeMarkerEmphasis(color, 2.35),
       };
   }
 }
@@ -206,6 +208,12 @@ export function MultiSeriesChart({
     return {
       backgroundColor: 'transparent',
       animation: false,
+      axisPointer: {
+        type: 'line',
+        snap: true,
+        lineStyle: { color: 'rgba(0,0,0,0.2)', width: 1, type: 'dashed' },
+        label: { show: false },
+      },
       grid: {
         left: 2,
         right: 6,
@@ -218,7 +226,7 @@ export function MultiSeriesChart({
         axisPointer: {
           type: 'line',
           snap: true,
-          lineStyle: { color: 'rgba(0,0,0,0.06)', width: 1 },
+          lineStyle: { color: 'rgba(0,0,0,0.2)', width: 1, type: 'dashed' },
           label: { show: false },
         },
         backgroundColor: '#fff',
