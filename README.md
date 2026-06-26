@@ -2,17 +2,6 @@
 
 React-компонент графика с 4 time-series сериями разных типов: **area**, **spline**, **line**, **bar**. Стили и поведение повторяют референс: розовый фон, левая колонка осей, tooltip с датой `DD.MM.YYYY`, hover с вертикальной линией и цветными halo на точках.
 
-## Быстрый старт
-
-```bash
-git clone https://github.com/abudkina/MultiSeriesTimeChart.git
-cd MultiSeriesTimeChart
-npm install
-npm run dev
-```
-
-Откройте http://localhost:5173
-
 ## Инициализация с 4 последовательностями
 
 ```tsx
@@ -104,13 +93,6 @@ const series: ChartSeries[] = [
 - React 19 + TypeScript
 - Vite
 - Apache ECharts
-
-## Сборка
-
-```bash
-npm run build
-npm run preview
-```
 
 ## Структура
 
