@@ -5,13 +5,24 @@ React-компонент графика с 4 time-series сериями разн
 ## Быстрый старт
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/multi-series-time-chart.git
+git clone https://github.com/<username>/multi-series-time-chart.git
 cd multi-series-time-chart
 npm install
 npm run dev
 ```
 
 Откройте http://localhost:5173
+
+### Опубликовать на GitHub
+
+```bash
+# в корне проекта (уже есть git init + commit)
+git branch -M main
+git remote add origin https://github.com/<username>/multi-series-time-chart.git
+git push -u origin main
+```
+
+Создайте пустой репозиторий `multi-series-time-chart` на github.com → New repository.
 
 ## Инициализация с 4 последовательностями
 
