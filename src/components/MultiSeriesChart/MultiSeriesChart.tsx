@@ -41,16 +41,17 @@ function getAxisIndex(format: AxisFormat): number {
   }
 }
 
-function activeMarkerEmphasis(color: string, scale = 2.35) {
+function activeMarkerEmphasis(color: string, size = 8) {
   return {
     focus: 'none' as const,
-    scale,
+    scale: false,
+    symbolSize: size,
     itemStyle: {
       color: '#fff',
       borderColor: color,
-      borderWidth: 2.5,
-      shadowBlur: 5,
-      shadowColor: 'rgba(0, 0, 0, 0.2)',
+      borderWidth: 2,
+      shadowBlur: 3,
+      shadowColor: 'rgba(0, 0, 0, 0.15)',
       shadowOffsetX: 0,
       shadowOffsetY: 1,
     },
@@ -80,13 +81,13 @@ function buildSeriesConfig(s: ChartSeries): SeriesOption {
         type: 'line' as const,
         smooth: false,
         symbol: 'circle',
-        symbolSize: 6,
+        symbolSize: 4,
         showSymbol: false,
         lineStyle: { width: 0 },
         areaStyle: { color, opacity: 0.88 },
-        itemStyle: { color: '#fff', borderColor: color, borderWidth: 2 },
+        itemStyle: { color: '#fff', borderColor: color, borderWidth: 1.5 },
         blur: noBlur,
-        emphasis: activeMarkerEmphasis(color, 2.2),
+        emphasis: activeMarkerEmphasis(color, 7),
       };
     case 'bar':
       return {
@@ -106,16 +107,16 @@ function buildSeriesConfig(s: ChartSeries): SeriesOption {
         type: 'line',
         smooth: 0.38,
         symbol: 'diamond',
-        symbolSize: 7,
+        symbolSize: 5,
         showSymbol: false,
         lineStyle: { color, width: 3.5, cap: 'round', join: 'round' },
         itemStyle: {
           color: '#fff',
           borderColor: color,
-          borderWidth: 2.5,
+          borderWidth: 2,
         },
         blur: noBlur,
-        emphasis: activeMarkerEmphasis(color, 2.3),
+        emphasis: activeMarkerEmphasis(color, 8),
       };
     case 'line':
       return {
@@ -123,12 +124,12 @@ function buildSeriesConfig(s: ChartSeries): SeriesOption {
         type: 'line',
         smooth: false,
         symbol: 'rect',
-        symbolSize: 6,
+        symbolSize: 4,
         showSymbol: true,
         lineStyle: { color, width: 1.8, cap: 'square', join: 'miter' },
         itemStyle: { color, borderWidth: 0 },
         blur: noBlur,
-        emphasis: activeMarkerEmphasis(color, 2.35),
+        emphasis: activeMarkerEmphasis(color, 8),
       };
   }
 }
